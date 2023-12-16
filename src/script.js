@@ -117,9 +117,7 @@ gltfLoader.load(
     action1.play()
     action2.play()
   }, (xhr) => {
-    if (xhr.loaded / xhr.total === 1) {
-      hideLoadingModal()
-    }
+    if (xhr.loaded === xhr.total) hideLoadingModal()
   }
 )
 
