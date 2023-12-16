@@ -8,6 +8,48 @@ THREE.ColorManagement.enabled = false
 /**
  * Base
  */
+/**
+ * HTML handling
+ */
+function hideLoadingModal() {
+  const loadingModal = document.getElementById('loading-modal')
+
+  loadingModal.style.display = 'none'
+}
+
+// Motion handling
+const IS_IOS_SAFARI = typeof DeviceOrientationEvent.requestPermission === 'function'
+
+function handleMobileOrientation(event) {
+  const x = -event.gamma
+  const y = event.beta
+
+  cursor.x = (x / 60) * 2
+  cursor.y = (y / 60) * 2
+}
+
+// Gift modal button
+const modalButton = document.getElementById('gift-btn')
+const modal = document.getElementById('modal')
+
+modalButton.addEventListener('click', dismissModal)
+
+function dismissModal() {
+  modal.style.display = 'none'
+
+
+  if (IS_IOS_SAFARI) {
+    DeviceOrientationEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') window.addEventListener('deviceorientation', handleMobileOrientation, true)
+      })
+      .catch(console.error);
+  } else window.addEventListener('deviceorientation', handleMobileOrientation, true)
+
+  setTimeout(() => {
+    canOpenGift = true
+  }, 1000)
+}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -51,6 +93,7 @@ const gltfLoader = new GLTFLoader()
 
 let mixer = null
 let canPlayMixerAnimation = false
+let canOpenGift = false
 
 // Gift box
 gltfLoader.load(
@@ -77,9 +120,10 @@ gltfLoader.load(
     action2.clampWhenFinished = true
     action1.play()
     action2.play()
-
-    isCameraFree = true
-    controls.enableDamping = true
+  }, (xhr) => {
+    if (xhr.loaded / xhr.total === 1) {
+      hideLoadingModal()
+    }
   }
 )
 
@@ -87,6 +131,7 @@ const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
 window.addEventListener('click', (event) => {
+  if (!canOpenGift) return
   mouse.x = (event.clientX / sizes.width) * 2 - 1
   mouse.y = - (event.clientY / sizes.height) * 2 + 1
 
@@ -97,11 +142,7 @@ window.addEventListener('click', (event) => {
   if (intersects.length > 0) {
     const intersect = intersects[0]
 
-    console.log(intersect.object.name)
-
-    if (intersect.object.name === 'gift') {
-      canPlayMixerAnimation = true
-    }
+    if (intersect.object.name === 'gift') canPlayMixerAnimation = true
   }
 }, { passive: true })
 
