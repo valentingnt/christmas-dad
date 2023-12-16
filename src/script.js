@@ -32,7 +32,7 @@ function handleMobileOrientation(event) {
 const modalButton = document.getElementById('gift-btn')
 const modal = document.getElementById('modal')
 
-modalButton.addEventListener('click', dismissModal)
+modalButton.addEventListener('click', dismissModal, { passive: true })
 
 function dismissModal() {
   modal.style.display = 'none'
@@ -42,10 +42,10 @@ function dismissModal() {
   if (IS_IOS_SAFARI) {
     DeviceOrientationEvent.requestPermission()
       .then(permissionState => {
-        if (permissionState === 'granted') window.addEventListener('deviceorientation', handleMobileOrientation, true)
+        if (permissionState === 'granted') window.addEventListener('deviceorientation', handleMobileOrientation, { passive: true })
       })
       .catch(console.error);
-  } else window.addEventListener('deviceorientation', handleMobileOrientation, true)
+  } else window.addEventListener('deviceorientation', handleMobileOrientation, { passive: true })
 }
 
 // Canvas
