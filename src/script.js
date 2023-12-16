@@ -104,6 +104,8 @@ gltfLoader.load(
 
     scene.add(gltf.scene)
 
+    hideLoadingModal()
+
     mixer = new THREE.AnimationMixer(gltf.scene)
     const animation1 = gltf.animations[0]
     const animation2 = gltf.animations[1]
@@ -116,9 +118,7 @@ gltfLoader.load(
     action2.clampWhenFinished = true
     action1.play()
     action2.play()
-  }, (xhr) => {
-    if (xhr.loaded === xhr.total) hideLoadingModal()
-  }
+  },
 )
 
 const raycaster = new THREE.Raycaster()
