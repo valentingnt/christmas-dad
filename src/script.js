@@ -37,6 +37,7 @@ modalButton.addEventListener('click', dismissModal)
 function dismissModal() {
   modal.style.display = 'none'
 
+  window.requestAnimationFrame(() => canOpenGift = true)
 
   if (IS_IOS_SAFARI) {
     DeviceOrientationEvent.requestPermission()
@@ -45,10 +46,6 @@ function dismissModal() {
       })
       .catch(console.error);
   } else window.addEventListener('deviceorientation', handleMobileOrientation, true)
-
-  setTimeout(() => {
-    canOpenGift = true
-  }, 1000)
 }
 
 // Canvas
@@ -99,7 +96,6 @@ let canOpenGift = false
 gltfLoader.load(
   './models/gift-box-dad/gift-box-dad.gltf',
   (gltf) => {
-    console.log(gltf)
     gltf.scene.scale.set(2, 2, 2)
     gltf.scene.position.set(0, -1.5, 0)
     gltf.scene.rotation.y = Math.PI
