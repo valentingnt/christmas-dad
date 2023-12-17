@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 THREE.ColorManagement.enabled = false
@@ -118,13 +117,12 @@ gltfLoader.load(
     action2.clampWhenFinished = true
     action1.play()
     action2.play()
-  },
-)
+  })
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
-window.addEventListener('click', (event) => {
+function onGiftClick(event) {
   if (!canOpenGift) return
   mouse.x = (event.clientX / sizes.width) * 2 - 1
   mouse.y = - (event.clientY / sizes.height) * 2 + 1
@@ -137,8 +135,12 @@ window.addEventListener('click', (event) => {
     const intersect = intersects[0]
 
     if (intersect.object.name === 'gift') canPlayMixerAnimation = true
+
+    window.removeEventListener('click', onGiftClick)
   }
-}, { passive: true })
+}
+
+window.addEventListener('click', onGiftClick, { passive: true })
 
 
 // Walls
@@ -242,11 +244,6 @@ const cursor = {
   x: 0,
   y: 0
 }
-
-window.addEventListener('mousemove', (event) => {
-  cursor.x = (event.clientX / sizes.width - 0.5) * 2
-  cursor.y = (- (event.clientY / sizes.height - 0.5)) * 2
-}, { passive: true })
 
 /**
  * Renderer
