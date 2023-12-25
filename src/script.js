@@ -10,6 +10,8 @@ const WALL_COLOR = '#c8c6bf'
 const WALL_METALNESS = 0
 const WALL_ROUGHNESS = .8
 
+console.log('test')
+
 // HTML Elements
 const loadingModal = document.getElementById('loading-modal')
 const modalButton = document.getElementById('gift-btn')
